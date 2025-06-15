@@ -3,6 +3,7 @@
 #include <vector>
 #include "src/sort/quickSort.hpp"
 #include "utils/input_parser.hpp"
+#include "src/sort/mergeSort.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -24,14 +25,29 @@ int main(int argc, char *argv[])
         {
             std::vector<int> data = readIntFile(inputFile);
 
-            std::cout << "Before sorting: ";
+            std::cout << "Before quick-sorting: ";
             for (int num : data)
                 std::cout << num << " ";
             std::cout << "\n";
 
             quickSort(data, 0, data.size() - 1);
 
-            std::cout << "After sorting: ";
+            std::cout << "After quick-sorting: ";
+            for (int num : data)
+                std::cout << num << " ";
+            std::cout << "\n";
+        }
+        if (algo == "mergesort")
+        {
+            std::vector<int> data = readIntFile(inputFile);
+            std::cout << "Before merge-sorting: ";
+            for (int num : data)
+                std::cout << num << " ";
+            std::cout << "\n";
+
+            mergeSort(data, 0, data.size() - 1);
+
+            std::cout << "After merge-sorting: ";
             for (int num : data)
                 std::cout << num << " ";
             std::cout << "\n";

@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 add_executable(dsa_toolbox
     main.cpp
     src/sort/quickSort.cpp
+    src/sort/mergeSort.cpp
     utils/input_parser.cpp
 )
 
