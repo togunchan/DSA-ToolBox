@@ -5,6 +5,7 @@
 #include "src/sort/quickSort.hpp"
 #include "src/sort/mergeSort.hpp"
 #include "utils/input_parser.hpp"
+#include "src/graph/graph.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -91,11 +92,36 @@ int main(int argc, char *argv[])
         auto durationMerge = std::chrono::duration_cast<std::chrono::microseconds>(endMerge - startMerge);
         std::cout << "MergeSort took: " << durationMerge.count() << " microseconds\n";
     }
+    else if (action == "graph")
+    {
+        //./dsa_toolbox graph --algo dfs --input ../data/graph.txt
+        if (argc < 6 || std::string(argv[2]) != "--algo" || std::string(argv[4]) != "--input")
+        {
+            std::cerr << "Usage: dsa-toolbox graph --algo dfs --input file\n";
+            return 1;
+        }
+        std::string algo = argv[3];
+        std::string inputFile = argv[5];
+
+        if (algo == "dfs")
+        {
+            Graph g;
+            g.loadFromFile(inputFile);
+            std::cout << "DFS traversal: ";
+            g.dfs(0);
+            std::cout << "\n";
+            g.printAdjList();
+        }
+        else
+        {
+            std::cerr << "Unknown graph algorithm: " << algo << "\n";
+            return 1;
+        }
+    }
     else
     {
-        std::cerr << "Invalid command. Use 'sort' or 'benchmark'.\n";
+        std::cerr << "Invalid command. Use 'sort' or 'benchmark or graph'.\n";
         return 1;
     }
-
     return 0;
 }

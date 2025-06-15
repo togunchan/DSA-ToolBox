@@ -7,6 +7,7 @@ add_executable(dsa_toolbox
     main.cpp
     src/sort/quickSort.cpp
     src/sort/mergeSort.cpp
+    src/graph/graph.cpp
     utils/input_parser.cpp
 )
 
