@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
             std::cout << num << " ";
         std::cout << "\n";
     }
-    else if (action == "benchmark")
+    else if (action == "benchmark-sort")
     {
         if (argc < 4 || std::string(argv[2]) != "--input")
         {
@@ -91,6 +91,25 @@ int main(int argc, char *argv[])
         auto endMerge = std::chrono::high_resolution_clock::now();
         auto durationMerge = std::chrono::duration_cast<std::chrono::microseconds>(endMerge - startMerge);
         std::cout << "MergeSort took: " << durationMerge.count() << " microseconds\n";
+    }
+    else if (action == "benchmark-graph")
+    {
+        std::string inputFile = argv[3];
+        std::vector<int> data = readIntFile(inputFile);
+
+        if (data.empty())
+        {
+            std::cerr << "Error: Input file is empty or not found.\n";
+            return 1;
+        }
+        // Graph
+        Graph g;
+        g.loadFromFile(inputFile);
+        auto startGraph = std::chrono::high_resolution_clock::now();
+        g.dfs(0);
+        auto endGraph = std::chrono::high_resolution_clock::now();
+        auto durationGraph = std::chrono::duration_cast<std::chrono::microseconds>(endGraph - startGraph);
+        std::cout << "Graph traversal took: " << durationGraph.count() << " microseconds\n";
     }
     else if (action == "graph")
     {
