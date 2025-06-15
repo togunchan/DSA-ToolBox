@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include "src/sort/quickSort.hpp"
+#include "utils/input_parser.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -12,14 +13,16 @@ int main(int argc, char *argv[])
     }
 
     std::string action = argv[1];
-    std::string flag = argv[2];
+    std::string algoFlag = argv[2];
     std::string algo = argv[3];
+    std::string inputFlag = argv[4];
+    std::string inputFile = argv[5];
 
-    if (action == "sort" || flag == "--algo")
+    if (action == "sort" && algoFlag == "--algo" && inputFlag == "--input")
     {
         if (algo == "quicksort")
         {
-            std::vector<int> data = {9, 4, 7, 3, 1, 6};
+            std::vector<int> data = readIntFile(inputFile);
 
             std::cout << "Before sorting: ";
             for (int num : data)
