@@ -1,66 +1,99 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <chrono>
 #include "src/sort/quickSort.hpp"
-#include "utils/input_parser.hpp"
 #include "src/sort/mergeSort.hpp"
+#include "utils/input_parser.hpp"
 
 int main(int argc, char *argv[])
 {
-    if (argc < 4)
+    if (argc < 2)
     {
-        std::cerr << "Usage: dsa-toolbox sort --algo quick\n";
+        std::cerr << "Usage:\n"
+                  << "  dsa-toolbox sort --algo quicksort|mergesort --input file\n"
+                  << "  dsa-toolbox benchmark --input file\n";
         return 1;
     }
 
     std::string action = argv[1];
-    std::string algoFlag = argv[2];
-    std::string algo = argv[3];
-    std::string inputFlag = argv[4];
-    std::string inputFile = argv[5];
-
-    if (action == "sort" && algoFlag == "--algo" && inputFlag == "--input")
+    if (action == "sort")
     {
+        if (argc < 6 || std::string(argv[2]) != "--algo" || std::string(argv[4]) != "--input")
+        {
+            std::cerr << "Usage: dsa-toolbox sort --algo quicksort|mergesort --input file\n";
+            return 1;
+        }
+        std::string algo = argv[3];
+        std::string inputFile = argv[5];
+        std::vector<int> data = readIntFile(inputFile);
+
+        if (data.empty())
+        {
+            std::cerr << "Error: Input file is empty or not found.\n";
+            return 1;
+        }
+
+        std::cout << "Before sorting: ";
+        for (int num : data)
+            std::cout << num << " ";
+        std::cout << "\n";
+
         if (algo == "quicksort")
         {
-            std::vector<int> data = readIntFile(inputFile);
-
-            std::cout << "Before quick-sorting: ";
-            for (int num : data)
-                std::cout << num << " ";
-            std::cout << "\n";
-
             quickSort(data, 0, data.size() - 1);
-
-            std::cout << "After quick-sorting: ";
-            for (int num : data)
-                std::cout << num << " ";
-            std::cout << "\n";
         }
-        if (algo == "mergesort")
+        else if (algo == "mergesort")
         {
-            std::vector<int> data = readIntFile(inputFile);
-            std::cout << "Before merge-sorting: ";
-            for (int num : data)
-                std::cout << num << " ";
-            std::cout << "\n";
-
             mergeSort(data, 0, data.size() - 1);
-
-            std::cout << "After merge-sorting: ";
-            for (int num : data)
-                std::cout << num << " ";
-            std::cout << "\n";
         }
         else
         {
             std::cerr << "Unknown algorithm: " << algo << "\n";
             return 1;
         }
+
+        std::cout << "After sorting: ";
+        for (int num : data)
+            std::cout << num << " ";
+        std::cout << "\n";
+    }
+    else if (action == "benchmark")
+    {
+        if (argc < 4 || std::string(argv[2]) != "--input")
+        {
+            std::cerr << "Usage: dsa-toolbox benchmark --input file\n";
+            return 1;
+        }
+
+        std::string inputFile = argv[3];
+        std::vector<int> data = readIntFile(inputFile);
+
+        if (data.empty())
+        {
+            std::cerr << "Error: Input file is empty or not found.\n";
+            return 1;
+        }
+
+        // QuickSort
+        std::vector<int> quickData = data;
+        auto startQuick = std::chrono::high_resolution_clock::now();
+        quickSort(quickData, 0, quickData.size() - 1);
+        auto endQuick = std::chrono::high_resolution_clock::now();
+        auto durationQuick = std::chrono::duration_cast<std::chrono::microseconds>(endQuick - startQuick);
+        std::cout << "QuickSort took: " << durationQuick.count() << " microseconds\n";
+
+        // MergeSort
+        std::vector<int> mergeData = data;
+        auto startMerge = std::chrono::high_resolution_clock::now();
+        mergeSort(mergeData, 0, mergeData.size() - 1);
+        auto endMerge = std::chrono::high_resolution_clock::now();
+        auto durationMerge = std::chrono::duration_cast<std::chrono::microseconds>(endMerge - startMerge);
+        std::cout << "MergeSort took: " << durationMerge.count() << " microseconds\n";
     }
     else
     {
-        std::cerr << "Invalid usage. Expected: sort --algo quicksort\n";
+        std::cerr << "Invalid command. Use 'sort' or 'benchmark'.\n";
         return 1;
     }
 
