@@ -63,3 +63,26 @@ void Graph::dfsUtil(int node, std::unordered_map<int, bool> &visited)
         }
     }
 }
+
+void Graph::bfs(int startNode)
+{
+    std::unordered_map<int, bool> visited;
+    // std::vector<bool> visited(adjList.size(), false);
+    std::queue<int> q;
+    q.push(startNode);
+    visited[startNode] = true;
+    while (!q.empty())
+    {
+        int current = q.front();
+        q.pop();
+        std::cout << current << " ";
+        for (int neighbor : adjList[current])
+        {
+            if (!visited[neighbor])
+            {
+                q.push(neighbor);
+                visited[neighbor] = true;
+            }
+        }
+    }
+}

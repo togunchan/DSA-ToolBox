@@ -72,6 +72,9 @@ public:
      */
     void dfsUtil(int node, std::unordered_map<int, bool> &visited);
 
+    void bfs(int startNode);
+
+
 private:
     /**
      * @brief Adjacency list representing graph connections.

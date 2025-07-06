@@ -35,7 +35,8 @@ int main(int argc, char *argv[])
             return 1;
         }
 
-        std::cout << "Before sorting: ";
+        std::cout << "-----------------------------" << std::endl;
+        std::cout << "Before " << algo << " : ";
         for (int num : data)
             std::cout << num << " ";
         std::cout << "\n";
@@ -43,10 +44,12 @@ int main(int argc, char *argv[])
         if (algo == "quicksort")
         {
             quickSort(data, 0, data.size() - 1);
+            std::cout << "-----------------------------" << std::endl;
         }
         else if (algo == "mergesort")
         {
             mergeSort(data, 0, data.size() - 1);
+            std::cout << "-----------------------------" << std::endl;
         }
         else
         {
@@ -54,10 +57,11 @@ int main(int argc, char *argv[])
             return 1;
         }
 
-        std::cout << "After sorting: ";
+        std::cout << "After " << algo << " : ";
         for (int num : data)
             std::cout << num << " ";
         std::cout << "\n";
+        std::cout << "-----------------------------" << std::endl;
     }
     else if (action == "benchmark-sort")
     {
@@ -94,22 +98,30 @@ int main(int argc, char *argv[])
     }
     else if (action == "benchmark-graph")
     {
-        std::string inputFile = argv[3];
-        std::vector<int> data = readIntFile(inputFile);
-
-        if (data.empty())
+        if (argc < 4 || std::string(argv[2]) != "--input")
         {
-            std::cerr << "Error: Input file is empty or not found.\n";
+            std::cerr << "Usage: dsa-toolbox benchmark-graph --input file\n";
             return 1;
         }
-        // Graph
+
+        std::string inputFile = argv[3];
+
         Graph g;
         g.loadFromFile(inputFile);
-        auto startGraph = std::chrono::high_resolution_clock::now();
+
+        // DFS Benchmark
+        auto startDFS = std::chrono::high_resolution_clock::now();
         g.dfs(0);
-        auto endGraph = std::chrono::high_resolution_clock::now();
-        auto durationGraph = std::chrono::duration_cast<std::chrono::microseconds>(endGraph - startGraph);
-        std::cout << "Graph traversal took: " << durationGraph.count() << " microseconds\n";
+        auto endDFS = std::chrono::high_resolution_clock::now();
+        auto durationDFS = std::chrono::duration_cast<std::chrono::microseconds>(endDFS - startDFS);
+        std::cout << "DFS traversal took: " << durationDFS.count() << " microseconds\n";
+
+        // BFS Benchmark
+        auto startBFS = std::chrono::high_resolution_clock::now();
+        g.bfs(0);
+        auto endBFS = std::chrono::high_resolution_clock::now();
+        auto durationBFS = std::chrono::duration_cast<std::chrono::microseconds>(endBFS - startBFS);
+        std::cout << "BFS traversal took: " << durationBFS.count() << " microseconds\n";
     }
     else if (action == "graph")
     {
@@ -128,6 +140,15 @@ int main(int argc, char *argv[])
             g.loadFromFile(inputFile);
             std::cout << "DFS traversal: ";
             g.dfs(0);
+            std::cout << "\n";
+            g.printAdjList();
+        }
+        else if (algo == "bfs")
+        {
+            Graph g;
+            g.loadFromFile(inputFile);
+            std::cout << "BFS traversal: ";
+            g.bfs(0);
             std::cout << "\n";
             g.printAdjList();
         }
